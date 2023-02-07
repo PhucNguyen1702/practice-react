@@ -10,11 +10,11 @@ const TableUsers = (props) => {
 
     const getListUser = async () => {
         let res = await fetchAllUser();
-        if(res && res.data && res.data.data){
-            setListUser(res.data.data)
+        // console.log("Check res :",res)
+        if(res && res.data ){
+            setListUser(res.data)
         }
     }
-    console.log(listUsers)
     return(
         <>
         <Table striped bordered hover>
