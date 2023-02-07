@@ -1,19 +1,26 @@
 import {Table} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {fetchAllUser} from "../service/UserService";
-
+import ReactPaginate from 'react-paginate';
 const TableUsers = (props) => {
     const [listUsers,setListUser] = useState([]);
+    const [totalUsers,setTotalUsers] = useState(0);
+    const [totalPage,setTotalPage] = useState(0)
     useEffect(()=>{
-        getListUser();
+        getListUser(1);
         },[])
-
-    const getListUser = async () => {
-        let res = await fetchAllUser();
-        // console.log("Check res :",res)
+    
+    const getListUser = async (page) => {
+        let res = await fetchAllUser(page);
+        console.log("Check res :",res)
         if(res && res.data ){
-            setListUser(res.data)
+            setListUser(res.data);
+            setTotalPage(res.total);//Tong so luong phan tu
+            setTotalPage(res.total_pages)
         }
+    }
+    const handlePageClick = (event) => {
+      getListUser(+event.selected+1);
     }
     return(
         <>
@@ -41,6 +48,26 @@ const TableUsers = (props) => {
             }
             </tbody>
         </Table>
+            <ReactPaginate
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                marginPagesDisplayed={2}
+                pageCount={totalPage}
+                previousLabel="< previous"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakLabel="..."
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination"
+                activeClassName="active"
+                renderOnZeroPageCount={null}
+            />
     </>);
 }
 export default TableUsers ;
